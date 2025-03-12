@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 8, 8, 12;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    )
+    fixed;
+}
+
+/* Custom utility classes */
+@layer components {
+  .glass-card {
+    @apply bg-gray-900 border border-gray-800 rounded-2xl shadow-lg;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400;
+  }
+  
+  .button-primary {
+    @apply px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-full font-medium transition-all duration-300 shadow-md hover:shadow-lg active:scale-95;
+  }
+  
+  .button-secondary {
+    @apply px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full font-medium transition-all duration-300 active:scale-95;
+  }
+  
+  .section-padding {
+    @apply py-20 md:py-28 px-4;
+  }
+  
+  .heading-xl {
+    @apply font-bold text-4xl md:text-5xl lg:text-6xl tracking-tight;
+  }
+  
+  .heading-lg {
+    @apply font-bold text-3xl md:text-4xl tracking-tight;
+  }
+}
+
+/* Animation for gradient backgrounds */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
