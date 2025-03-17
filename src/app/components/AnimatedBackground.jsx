@@ -2,91 +2,97 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-export const ParticlesBackground = ({
-  particleCount = 50,
-  particleColor = '#ffffff',
+// Helper function to convert hex to rgb
+const hexToRgb = (hex) => {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? 
+    `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : 
+    '255, 255, 255';
+};
+
+export function GradientBackground({ 
+  particleCount = 50, 
+  particleColor = "#6366f1", 
   particleSize = 3,
-  speed = 1,
-  opacity = 0.5,
-  linkColor = '#ffffff',
-  linkOpacity = 0.1,
-  linkDistance = 150,
-  className = ''
-}) => {
+  linkColor = "#a5b4fc",
+  linkDistance = 150, 
+  linkOpacity = 0.3,
+  speed = 0.5
+}) {
   const canvasRef = useRef(null);
-  const [particles, setParticles] = useState([]);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  
-  // Initialize particles
+  const [particles, setParticles] = useState([]);
+
+  // Initialize dimensions and particles
   useEffect(() => {
     if (!canvasRef.current) return;
-    
+
     const updateDimensions = () => {
-      if (canvasRef.current) {
-        const { width, height } = canvasRef.current.getBoundingClientRect();
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
-        setDimensions({ width, height });
+      const canvas = canvasRef.current;
+      const container = canvas.parentElement;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      canvas.width = width;
+      canvas.height = height;
+      setDimensions({ width, height });
+
+      // Initialize particles
+      const newParticles = [];
+      for (let i = 0; i < particleCount; i++) {
+        newParticles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * particleSize + 1,
+          vx: (Math.random() - 0.5) * speed,
+          vy: (Math.random() - 0.5) * speed,
+          opacity: Math.random() * 0.5 + 0.3
+        });
       }
+      setParticles(newParticles);
     };
-    
+
     updateDimensions();
     window.addEventListener('resize', updateDimensions);
-    
+
     return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
-  
-  // Create particles
-  useEffect(() => {
-    if (dimensions.width === 0 || dimensions.height === 0) return;
-    
-    const newParticles = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * dimensions.width,
-      y: Math.random() * dimensions.height,
-      radius: Math.random() * particleSize + 1,
-      vx: (Math.random() - 0.5) * speed,
-      vy: (Math.random() - 0.5) * speed,
-      opacity: Math.random() * opacity + 0.1
-    }));
-    
-    setParticles(newParticles);
-  }, [dimensions, particleCount, particleSize, speed, opacity]);
-  
+  }, [particleCount, particleSize, speed]);
+
   // Animation loop
   useEffect(() => {
     if (!canvasRef.current || particles.length === 0) return;
-    
+
     const ctx = canvasRef.current.getContext('2d');
     let animationFrameId;
-    
+
     const animate = () => {
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-      
+
       // Draw particles and update positions
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-        
+
         // Update position
         p.x += p.vx;
         p.y += p.vy;
-        
+
         // Bounce off walls
         if (p.x < 0 || p.x > dimensions.width) p.vx *= -1;
         if (p.y < 0 || p.y > dimensions.height) p.vy *= -1;
-        
+
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${hexToRgb(particleColor)}, ${p.opacity})`;
         ctx.fill();
-        
+
         // Draw links
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
           const dy = p.y - p2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          
+
           if (distance < linkDistance) {
             const opacity = (1 - distance / linkDistance) * linkOpacity;
             ctx.beginPath();
@@ -97,35 +103,26 @@ export const ParticlesBackground = ({
           }
         }
       }
-      
+
       animationFrameId = requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
+
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [particles, dimensions, particleColor, linkColor, linkDistance, linkOpacity]);
-  
-  // Helper function to convert hex to rgb
-  const hexToRgb = (hex) => {
-    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-    
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result 
-      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` 
-      : '255, 255, 255';
-  };
-  
+  }, [dimensions, particles, particleColor, linkColor, linkDistance, linkOpacity]);
+
   return (
-    <canvas
-      ref={canvasRef}
-      className={`absolute inset-0 w-full h-full ${className}`}
-    />
+    <div className="absolute inset-0 overflow-hidden -z-10">
+      <canvas 
+        ref={canvasRef} 
+        className="absolute w-full h-full"
+      />
+    </div>
   );
-};
+}
 
 export const WavesBackground = ({
   waveCount = 3,
@@ -138,7 +135,7 @@ export const WavesBackground = ({
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [phase, setPhase] = useState(0);
-  
+
   // Set up canvas dimensions
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -231,7 +228,7 @@ export const WavesBackground = ({
 };
 
 // Animated gradient background
-export const GradientBackground = ({
+export const GradientBackgroundOriginal = ({
   colors = ['#4338ca', '#7c3aed', '#3b82f6', '#8b5cf6'],
   speed = 3,
   className = ''
@@ -373,4 +370,4 @@ export const NoiseBackground = ({
   );
 };
 
-export default ParticlesBackground;
+export default GradientBackground;
