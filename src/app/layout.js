@@ -1,7 +1,7 @@
 import './globals.css';
 import { Inter, Sora } from 'next/font/google';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // Font configuration
 const inter = Inter({ 

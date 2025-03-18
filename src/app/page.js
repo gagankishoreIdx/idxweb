@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { ScrollProgressBar } from './components/ScrollIndicator';
+import { ScrollProgressBar } from '../components/ScrollIndicator';
 import Link from 'next/link';
-import { GradientBackground } from './components/AnimatedBackground';
-import Card3D from './components/Card3D';
+import { GradientBackground } from '../components/AnimatedBackground';
+import Card3D from '../components/Card3D';
+import CryptoTokensGrid from '@/components/CryptoTokensGrid';
+import FeaturesSection from '@/components/IDXWalletFeatures';
+import SecuritySection from '@/components/IDXWalletSecurity';
+import { ArrowLeftRight, Coins, Compass, Layers } from 'lucide-react';
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +25,7 @@ export default function HomePage() {
   if (isLoading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center animate-fade-in">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
           <div className="text-xl font-medium text-white">Loading IDX Wallet</div>
         </div>
@@ -33,22 +37,20 @@ export default function HomePage() {
     <main className="min-h-screen bg-gray-900 text-white">
       <ScrollProgressBar color="bg-blue-500" height="h-1" />
       
-      
-      
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 flex items-center min-h-screen">
         <div className="container mx-auto px-4 z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="lg:w-1/2">
               <div className="animate-fade-in">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in-left">
                   The <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Next-Gen</span> iDX Wallet for Web3
                 </h1>
                 <p className="text-xl text-gray-300 mb-8">
                   Secure, intuitive, and powerful. IDX Wallet gives you complete control over your digital assets with cutting-edge security and a seamless user experience.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Link href="/download" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:shadow-lg transition-all font-medium">
+                  <Link href="/download" className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:shadow-lg transition-all font-medium animate-bounce">
                     Download Now
                   </Link>
                   <Link href="/learn" className="px-6 py-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors font-medium border border-gray-700">
@@ -56,11 +58,15 @@ export default function HomePage() {
                   </Link>
                 </div>
                 
-                <div className="flex items-center gap-4 mt-8">
+                <div className="flex items-center gap-4 mt-8 animate-fade-in-up">
                   <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 border-2 border-gray-900"></div>
+                    {[{id:1,url:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D', altText:'User 1'}, {id:2,url:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D', altText:'User 2'}, {id:3,url:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D', altText:'User 3'}, {id:4,url:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8fDA%3D', altText:'User 4'}].map((user) => (
+                      <div key={user.id} className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 border-2 border-gray-900">
+                        <img src={user.url} alt={user.altText} className="w-full h-full rounded-full" />
+                      </div>
                     ))}
+                    
+                 
                   </div>
                   <p className="text-gray-400 text-sm">
                     <span className="text-white font-semibold">10,000+</span> users trust IDX Wallet
@@ -68,7 +74,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            
             <div className="lg:w-1/2">
               <div className="relative animate-fade-in">
                 <div className="absolute -inset-4 bg-blue-500 bg-opacity-20 rounded-lg blur-xl"></div>
@@ -86,123 +91,10 @@ export default function HomePage() {
         </div>
       </section>
       {/* Features Section */}
-      <section id="features" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Key Features</h2>
-            <p className="text-gray-300 max-w-3xl mx-auto">
-              IDX Wallet redefines what you can expect from a blockchain wallet with these powerful features
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature Cards */}
-            {[
-              {
-                title: "Multi-Chain Support",
-                description: "Seamlessly manage assets across Bitcoin, Ethereum, Solana, and multiple other blockchains in one unified interface.",
-                icon: "globe"
-              },
-              {
-                title: "Bank-Grade Security",
-                description: "Advanced encryption, biometric authentication, and hardware security module integration keep your assets safe.",
-                icon: "shield"
-              },
-              {
-                title: "DeFi Integration",
-                description: "Access decentralized exchanges, lending protocols, and yield farming opportunities directly from your wallet.",
-                icon: "chart"
-              },
-              {
-                title: "Smart Contract Interaction",
-                description: "Effortlessly interact with dApps and smart contracts with our intuitive interface and built-in contract analyzer.",
-                icon: "code"
-              },
-              {
-                title: "NFT Portfolio",
-                description: "View, manage, and showcase your NFT collection with our beautiful gallery view and instant market valuation.",
-                icon: "image"
-              },
-              {
-                title: "Cross-Device Sync",
-                description: "Access your wallet from any device with secure cloud synchronization that never compromises your private keys.",
-                icon: "sync"
-              }
-            ].map((feature, index) => (
-              <div key={index} className="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:transform hover:scale-105">
-                <div className="w-12 h-12 rounded-xl bg-blue-500 bg-opacity-20 flex items-center justify-center mb-6">
-                  <div className="w-6 h-6 text-blue-400"></div>
-                </div>
-                
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FeaturesSection/>
       
       {/* Security Section */}
-      <section id="security" className="py-20 bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="lg:w-1/2">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Enterprise-Grade <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Security</span>
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Your security is our top priority. IDX Wallet incorporates multiple layers of protection to ensure your assets remain safe.
-              </p>
-              
-              <div className="space-y-6">
-                {[
-                  {
-                    title: "Non-Custodial Architecture",
-                    description: "You maintain complete control of your private keys at all times – we never have access to your funds."
-                  },
-                  {
-                    title: "Secure Enclave Technology",
-                    description: "Private keys are stored in your device's secure enclave, isolated from the operating system."
-                  },
-                  {
-                    title: "Advanced Transaction Verification",
-                    description: "Every transaction is verified for suspicious activity and analyzed for potential smart contract vulnerabilities."
-                  }
-                ].map((item, index) => (
-                  <div key={index} className="flex gap-4">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex-shrink-0 mt-1"></div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
-                      <p className="text-gray-400">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="lg:w-1/2">
-              <div className="relative">
-                <div className="aspect-square max-w-md mx-auto p-8">
-                  <div className="relative h-full w-full rounded-xl overflow-hidden">
-                    <div className="absolute inset-0 bg-blue-500 bg-opacity-30 animate-pulse"></div>
-                    <div className="absolute inset-4 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center">
-                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                          </svg>
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">Military-Grade Encryption</h3>
-                        <p className="text-gray-400">AES-256 encryption and secure element technology protect your digital assets</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SecuritySection/>
       
       {/* Call to Action Section */}
       <section className="py-20">
@@ -213,7 +105,7 @@ export default function HomePage() {
             
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
               <div className="md:w-2/3">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-fade-in-left">
                   Ready to Experience the Future of iDX Wallets?
                 </h2>
                 <p className="text-gray-300 mb-6">
@@ -260,30 +152,30 @@ export default function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              {
-                title: "IDX Swap",
-                description: "Exchange tokens at the best rates with our built-in DEX aggregator",
-                icon: "swap"
-              },
-              {
-                title: "IDX Bridge",
-                description: "Move assets between blockchains seamlessly with low fees",
-                icon: "bridge"
-              },
-              {
-                title: "IDX Staking",
-                description: "Earn passive income by staking your assets directly in your wallet",
-                icon: "staking"
-              },
-              {
-                title: "IDX Explorer",
-                description: "Browse and interact with dApps in our secure built-in browser",
-                icon: "explorer"
-              }
-            ].map((item, index) => (
+    {
+      title: "IDX Swap",
+      description: "Exchange tokens at the best rates with our built-in DEX aggregator",
+      icon: <ArrowLeftRight className="w-6 h-6 text-blue-400" />
+    },
+    {
+      title: "IDX Bridge",
+      description: "Move assets between blockchains seamlessly with low fees",
+      icon: <Layers className="w-6 h-6 text-blue-400" />
+    },
+    {
+      title: "IDX Staking",
+      description: "Earn passive income by staking your assets directly in your wallet",
+      icon: <Coins className="w-6 h-6 text-blue-400" />
+    },
+    {
+      title: "IDX Explorer",
+      description: "Browse and interact with dApps in our secure built-in browser",
+      icon: <Compass className="w-6 h-6 text-blue-400" />
+    }
+  ].map((item, index) => (
               <div key={index} className="bg-gray-800 border border-gray-700 rounded-xl p-6 h-full hover:shadow-md hover:shadow-blue-500/10 transition-all duration-300 hover:transform hover:scale-105">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mb-4">
-                  <div className="w-6 h-6 text-white"></div>
+                  <div className="w-6 h-6 text-white">{item.icon}</div>
                 </div>
                 
                 <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
@@ -448,17 +340,7 @@ export default function HomePage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {/* Token logos */}
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((index) => (
-              <div key={index} className="flex flex-col items-center transition-all duration-300 hover:transform hover:scale-110">
-                <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-3 border border-gray-700">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600"></div>
-                </div>
-                <span className="text-gray-300 text-sm">Token {index}</span>
-              </div>
-            ))}
-          </div>
+          <CryptoTokensGrid/>
           
           <div className="mt-12 text-center">
             <Link href="/tokens" className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors">
@@ -470,7 +352,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-     
     </main>
   );
 }
